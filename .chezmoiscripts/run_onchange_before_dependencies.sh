@@ -1,11 +1,20 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 sudo dnf install -y \
     @development-tools \
     gcc \
     gcc-c++ \
     make \
+    cmake \
+    pkgconfig \
+    fontconfig-devel \
+    freetype-devel \
+    libxcb-devel \
+    libxkbcommon-devel \
+    curl \
+    wget \
+    git \
     fd-find \
     nodejs \
     npm \
@@ -19,3 +28,5 @@ sudo dnf install -y \
     fortune-mod \
     chafa \
     timg
+
+pip3 install autotiling

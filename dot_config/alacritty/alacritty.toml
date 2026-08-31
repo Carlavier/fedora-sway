@@ -5,15 +5,15 @@ save_to_clipboard = true
 blinking = "Off"
 
 [font]
-size = 12.5
+size = 11.8
 
 [font.normal]
 family = "JetBrainsMono Nerd Font"
-style = "Regular"
+style = "SemiBold"
 
 [font.bold]
 family = "JetBrainsMono Nerd Font"
-style = "Bold"
+style = "ExtraBold"
 
 [font.italic]
 family = "JetBrainsMono Nerd Font"
@@ -21,7 +21,7 @@ style = "Italic"
 
 [font.bold_italic]
 family = "JetBrainsMono Nerd Font"
-style = "Bold Italic"
+style = "ExtraBold Italic"
 
 [window]
 startup_mode = "Maximized"
@@ -34,24 +34,24 @@ background = '#000000'
 foreground = '#ffffff'
 
 [colors.normal]
-black   = '#000000'
-red     = '#cc0000'
-green   = '#1cb954'
-yellow  = '#c4a000'
-blue    = '#3465a4'
+black = '#000000'
+red = '#cc0000'
+green = '#1cb954'
+yellow = '#c4a000'
+blue = '#3465a4'
 magenta = '#75507b'
-cyan    = '#06989a'
-white   = '#d3d7cf'
+cyan = '#06989a'
+white = '#d3d7cf'
 
 [colors.bright]
-black   = '#555753'
-red     = '#ef2929'
-green   = '#1cb954'
-yellow  = '#fce94f'
-blue    = '#3465a4'
+black = '#555753'
+red = '#ef2929'
+green = '#1cb954'
+yellow = '#fce94f'
+blue = '#3465a4'
 magenta = '#ad7fa8'
-cyan    = '#34e2e2'
-white   = '#eeeeec'
+cyan = '#34e2e2'
+white = '#eeeeec'
 
 [[keyboard.bindings]]
 key = "1"
