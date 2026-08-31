@@ -18,3 +18,4 @@ NVIM="$HOME/.local/bin/nvim"
 $NVIM --headless -c "Lazy! sync" +qa || true
 $NVIM --headless -c "Lazy! build telescope-fzf-native.nvim" +qa || true
 $NVIM --headless -c "MasonInstall basedpyright clangd emmet-language-server lua-language-server vtsls" +qa || true
+
