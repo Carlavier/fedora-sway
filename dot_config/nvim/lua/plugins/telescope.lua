@@ -30,12 +30,16 @@ local function folder_icon_entry_maker(opts)
   end
 end
 
+-- Shared ripgrep command for file search across distros
+local rg_find_cmd = { 'rg', '--files', '--hidden', '--glob', '!.git/*' }
+
 _G.search_handlers = {
   find_files = function()
     local builtin = require('telescope.builtin')
     local cwd = vim.uv.cwd()
     builtin.find_files({
       cwd = cwd,
+      find_command = rg_find_cmd,
       entry_maker = folder_icon_entry_maker({ cwd = cwd }),
     })
   end,
@@ -53,7 +57,7 @@ _G.search_handlers = {
     local conf = vim.fn.stdpath('config')
     builtin.find_files({
       cwd = conf,
-      find_command = { 'fdfind', '--type', 'f', '--type', 'd', '--hidden', '--strip-cwd-prefix' },
+      find_command = rg_find_cmd,
       entry_maker = folder_icon_entry_maker({ cwd = conf }),
     })
   end,
@@ -68,7 +72,7 @@ return {
   },
   keys = {
     { '<leader>sf', desc = 'Search Files' },
-    { '<leader>[', desc = 'which_key_ignore' },
+    { '<leader>[',  desc = 'which_key_ignore' },
     { '<leader>sg', desc = 'Search by Grep' },
     { '<leader>sh', desc = 'Search Help' },
     { '<leader>sk', desc = 'Search Keymaps' },
@@ -76,6 +80,7 @@ return {
   },
   config = function()
     local telescope = require('telescope')
+    local actions = require('telescope.actions')
 
     telescope.setup({
       defaults = {
@@ -95,6 +100,8 @@ return {
             ['<C-h>'] = function()
               vim.api.nvim_input('<C-w>')
             end,
+            ['<Tab>'] = actions.move_selection_worse,
+            ['<S-Tab>'] = actions.move_selection_better,
           },
         },
       },
@@ -108,7 +115,7 @@ return {
       },
       pickers = {
         find_files = {
-          find_command = { 'fdfind', '--type', 'f', '--type', 'd', '--hidden', '--strip-cwd-prefix' },
+          find_command = rg_find_cmd,
           entry_maker = function(line)
             return folder_icon_entry_maker({ cwd = vim.uv.cwd() })(line)
           end,

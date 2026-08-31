@@ -1,0 +1,256 @@
+* {
+    font-family: 'Noto Sans Mono', 'Font Awesome 6 Free', 'Font Awesome 6 Brands', monospace;
+    font-size: 13px;
+}
+
+window#waybar {
+    background-color: #0b0b0b;
+    border-bottom: 2px solid #282a2d;
+    color: #ffffff;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+button {
+    box-shadow: inset 0 -3px transparent;
+    border: none;
+    border-radius: 0;
+}
+
+button:hover {
+    background: inherit;
+    box-shadow: inset 0 -3px #ff5252;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    background-color: transparent;
+    color: #676e7b;
+}
+
+#workspaces button:hover {
+    background: #282a2d;
+    color: #ffffff;
+}
+
+#workspaces button.focused, #workspaces button.active {
+    background-color: #3d1a1a;
+    color: #ffffff;
+    box-shadow: inset 0 -3px #ff5252;
+}
+
+#workspaces button.urgent {
+    background-color: #ff5252;
+    color: #ffffff;
+}
+
+#mode {
+    background-color: #282a2d;
+    color: #ff5252;
+    box-shadow: inset 0 -3px #ff5252;
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#wireplumber,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#scratchpad,
+#power-profiles-daemon,
+#mpd {
+    padding: 0 10px;
+    margin: 0 2px;
+}
+
+#window,
+#workspaces {
+    margin: 0 4px;
+}
+
+.modules-left > widget:first-child > #workspaces {
+    margin-left: 0;
+}
+
+.modules-right > widget:last-child > #workspaces {
+    margin-right: 0;
+}
+
+/* --- Multi-Color Accent Modules --- */
+
+/* Clock: Dark neutral to match bar style */
+#clock {
+    background-color: transparent;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* CPU: Green */
+#cpu {
+    background-color: #26A65B;
+    color: #ffffff;
+}
+
+/* Memory: Light touch of Pink */
+#memory {
+    background-color: #f5c2e7;
+    color: #0b0b0b;
+    font-weight: bold;
+}
+
+/* Disk: Warm Orange */
+#disk {
+    background-color: #f0932b;
+    color: #ffffff;
+}
+
+/* Temperature: Red / Critical Red */
+#temperature {
+    background-color: #282a2d;
+    color: #ff5252;
+}
+
+#temperature.critical {
+    background-color: #ff5252;
+    color: #ffffff;
+}
+
+/* Audio: Bright Yellow */
+#pulseaudio {
+    background-color: #282a2d;
+    color: #ffffff;
+}
+
+#pulseaudio.muted, #wireplumber.muted {
+    background-color: #18191a;
+    color: #676e7b;
+}
+
+/* Network: Soft Green */
+#network {
+    background-color: #282a2d;
+    color: #ffffff;
+}
+
+#network.disconnected {
+    background-color: #ff5252;
+    color: #ffffff;
+}
+
+/* Battery: Yellow when normal, Green when charging */
+#battery {
+    background-color: #282a2d;
+    color: #ffffff;
+}
+
+#battery.charging, #battery.plugged {
+    background-color: #26A65B;
+    color: #ffffff;
+}
+
+@keyframes blink {
+    to {
+        background-color: #ff5252;
+        color: #ffffff;
+    }
+}
+
+#battery.critical:not(.charging) {
+    background-color: #ff5252;
+    color: #ffffff;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: steps(12);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#idle_inhibitor {
+    background-color: #282a2d;
+    color: #676e7b;
+}
+
+#idle_inhibitor.activated {
+    background-color: #f0932b;
+    color: #ffffff;
+}
+
+#language, #keyboard-state {
+    background-color: #282a2d;
+    color: #ffffff;
+    padding: 0 5px;
+    margin: 0 2px;
+}
+
+/* --- Tray Styling --- */
+#tray {
+    background-color: #18191a;
+    padding: 0 8px;
+    margin: 0 2px;
+}
+
+#tray > .passive,
+#tray > .active,
+#tray > .needs-attention {
+    padding: 0 4px;
+}
+
+#tray image {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .nm-applet image,
+#tray > .networkmanager image {
+    padding: 2px;
+}
+
+#tray > .blueman,
+#tray > .blueman-applet image {
+    padding: 2px;
+}
+
+#bluetooth {
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 0 6px;
+}
+
+#bluetooth.connected {
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 0 14px;
+}
+
+#bluetooth.off,
+#bluetooth.disabled {
+    background-color: transparent;
+    color: #676e7b;
+    padding: 0 6px;
+}
+
+#power-profiles-daemon.power-saver {
+    background-color: #26A65B;
+    color: #ffffff;
+}
+
+#power-profiles-daemon.balanced {
+    background-color: #ff9f1c;
+    color: #ffffff;
+}
+
+#power-profiles-daemon.performance {
+    background-color: #ff5252;
+    color: #ffffff;
+}

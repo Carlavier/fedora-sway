@@ -9,10 +9,10 @@ set $term alacritty
 
 set $rofi_cmd rofi -terminal '$term'
 
-set $menu $rofi_cmd -show combi -combi-modes drun#run -modes combi
+# set $menu $rofi_cmd -show combi -combi-modes drun#run -modes combi
 
 include '$(/usr/libexec/sway/layered-include "/usr/share/sway/config.d/*.conf" "/etc/sway/config.d/*.conf" "${XDG_CONFIG_HOME:-$HOME/.config}/sway/config.d/*.conf")'
-include ./config.d/*
+include ./config.d/*.conf
 
 # Include configs from 3 locations:
 #  - /usr/share/sway/config.d
@@ -39,23 +39,9 @@ include ./config.d/*
 exec_always {
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
     gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
 }
 
 exec_always ~/.local/bin/autotiling
 
-default_border pixel 2
-default_floating_border pixel 2
-
-# 2. Force pixel borders on ALL CURRENT and XWayland windows
-for_window [app_id=".*"] border pixel 2
-for_window [class=".*"] border pixel 2
-
-set $bg        #1e1e2e
-set $focused   #89b4fa
-set $inactive  #313244
-set $text      #cdd6f4
-
-# Colors:               border    bg        text   indicator child_border
-client.focused          $focused  $focused  $bg    $focused  $focused
-client.focused_inactive  $inactive $inactive $text  $inactive $inactive
-client.unfocused        $inactive $bg       $text  $inactive $inactive
+set $menu rofi -show combi -combi-modes drun#run -modes combi -combi-display-format "<span foreground='#777777'><i>{mode}</i></span>  {text}" -theme ~/.config/rofi/dark_flat.rasi
