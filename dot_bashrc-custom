@@ -12,13 +12,13 @@ elif [ -n "$ALACRITTY_WINDOW_ID" ] && [ -z "$TMUX" ] && command -v tmux &>/dev/n
 	tmux new-session -A -s main
 fi
 
-setup() {
-	~/.local/bin/custom-scripts/setup-workspaces.sh
-}
+# setup() {
+# 	~/.local/bin/custom-scripts/setup-workspaces.sh
+# }
 
-screen-off() {
-	~/.local/bin/custom-scripts/screen-off.sh
-}
+# screen-off() {
+# 	~/.local/bin/custom-scripts/screen-off.sh
+# }
 
 eval "$(zoxide init bash --cmd cd)"
 
