@@ -20,6 +20,7 @@ sudo dnf install -y \
     npm \
     ripgrep \
     python3-pip \
+    pipx \
     luarocks \
     lua \
     lua-devel \
@@ -29,4 +30,4 @@ sudo dnf install -y \
     chafa \
     timg
 
-pip3 install autotiling
+pipx install autotiling

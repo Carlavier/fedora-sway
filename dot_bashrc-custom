@@ -1,0 +1,37 @@
+#!/bin/bash
+
+bind '"\C-h": backward-kill-word'
+
+export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+
+if [ -n "$SSH_CONNECTION" ] && [ -z "$TMUX" ] && command -v tmux &>/dev/null; then
+	CLIENT_IP=$(echo "$SSH_CONNECTION" | awk '{print $1}')
+	SESSION_NAME="ssh-${CLIENT_IP//[\.:]/-}"
+	exec tmux new-session -A -s "$SESSION_NAME"
+elif [ -n "$ALACRITTY_WINDOW_ID" ] && [ -z "$TMUX" ] && command -v tmux &>/dev/null; then
+	tmux new-session -A -s main
+fi
+
+setup() {
+	~/.local/bin/custom-scripts/setup-workspaces.sh
+}
+
+screen-off() {
+	~/.local/bin/custom-scripts/screen-off.sh
+}
+
+eval "$(zoxide init bash --cmd cd)"
+
+if [ -x "$HOME/.local/bin/thefuck" ]; then
+	eval "$("$HOME/.local/bin/thefuck" --alias)"
+fi
+
+th() {
+	tmux split-window -v -c "#{pane_current_path}"
+}
+
+tv() {
+	tmux split-window -h -c "#{pane_current_path}"
+}
+
+stty -ixon
