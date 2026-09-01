@@ -19,11 +19,18 @@
         "power-profiles-daemon",
         "network",
         "bluetooth",
-        "sway/language",
+        "custom/fcitx5",
         "clock",
         "tray"
     ],
     // Modules configuration
+    "custom/fcitx5": {
+        "exec": "~/.local/bin/waybar-fcitx.sh",
+        "interval": 0.1,
+        "format": "{}",
+        "on-click": "fcitx5-remote -t",
+        "tooltip": false
+    },
     "sway/workspaces": {
         "disable-scroll": true,
         "warp-on-scroll": false,
@@ -107,6 +114,7 @@
         //   "blueman": "bluetooth",
         //   "TelegramDesktop": "$HOME/.local/share/icons/hicolor/16x16/apps/telegram.png"
         // }
+        "ignored-items": ["fcitx", "fcitx5", "org.fcitx.Fcitx5"]
     },
     "clock": {
         // "timezone": "America/New_York",

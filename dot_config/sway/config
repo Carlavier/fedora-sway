@@ -47,7 +47,8 @@ exec_always ~/.local/bin/autotiling
 
 exec xsettingsd
 exec dbus-update-activation-environment --systemd GTK_THEME=adw-gtk3-dark
-
+exec fcitx5 -d --replace --disable=notificationitem
 
 set $menu rofi -show combi -combi-modes drun#run -modes combi -combi-display-format "<span foreground='#777777'><i>{mode}</i></span>  {text}" -theme ~/.config/rofi/dark_flat.rasi
 
+# exec GTK_IM_MODULE=fcitx QT_IM_MODULE=fcitx XMODIFIERS=@im=fcitx alacritty

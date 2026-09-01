@@ -254,3 +254,9 @@ button:hover {
     background-color: #ff5252;
     color: #ffffff;
 }
+
+#custom-fcitx5 {
+    background-color: #282a2d;
+    color: #ffffff;
+    padding: 0 6px;
+}

@@ -28,6 +28,7 @@ sudo dnf install -y \
     cowsay \
     fortune-mod \
     chafa \
-    timg
+    timg \
+    ibus
 
 pipx install autotiling
