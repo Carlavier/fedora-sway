@@ -1,0 +1,10 @@
+[Unit]
+Description=Thunar File Manager
+Documentation=man:Thunar(1)
+
+[Service]
+Type=dbus
+BusName=org.xfce.FileManager
+Environment=GTK_THEME=adw-gtk3-dark
+ExecStart=/usr/bin/thunar --daemon
+ExecStop=/usr/bin/thunar --quit

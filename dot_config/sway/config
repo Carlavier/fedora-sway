@@ -36,12 +36,18 @@ include ./config.d/*.conf
 # the trick, it's all in the `wordexp(3)`.
 #
 
+set $gnome-schema org.gnome.desktop.interface
 exec_always {
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+    gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
     gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
 }
 
 exec_always ~/.local/bin/autotiling
 
+exec xsettingsd
+exec dbus-update-activation-environment --systemd GTK_THEME=adw-gtk3-dark
+
+
 set $menu rofi -show combi -combi-modes drun#run -modes combi -combi-display-format "<span foreground='#777777'><i>{mode}</i></span>  {text}" -theme ~/.config/rofi/dark_flat.rasi
+
