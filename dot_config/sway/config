@@ -9,15 +9,13 @@ set $term alacritty
 
 set $rofi_cmd rofi -terminal '$term'
 
-# set $menu $rofi_cmd -show combi -combi-modes drun#run -modes combi
-
 include '$(/usr/libexec/sway/layered-include "/usr/share/sway/config.d/*.conf" "/etc/sway/config.d/*.conf" "${XDG_CONFIG_HOME:-$HOME/.config}/sway/config.d/*.conf")'
 include ./config.d/*.conf
 
 # Include configs from 3 locations:
-#  - /usr/share/sway/config.d
-#  - /etc/sway/config.d
-#  - $XDG_CONFIG_HOME/sway/config.d ($HOME/.config/sway/config.d)
+#   - /usr/share/sway/config.d
+#   - /etc/sway/config.d
+#   - $XDG_CONFIG_HOME/sway/config.d ($HOME/.config/sway/config.d)
 #
 # If multiple directories contain the files with the same name, the later
 # directory takes precedence; `$XDG_CONFIG_HOME/sway/config.d/20-swayidle.conf`
@@ -29,26 +27,19 @@ include ./config.d/*.conf
 # want to modify/override in the higher-level directory.
 #
 # For example, to disable the default bar from Fedora configs, you'll need to
-#     $ echo -n > "$HOME/.config/sway/config.d/90-bar.conf"
+#      $ echo -n > "$HOME/.config/sway/config.d/90-bar.conf"
 #
 # Note the quoting, the $() and the arguments quoting. All the parts are equally
 # important to make the magic work. And if you want to learn the secret behind
 # the trick, it's all in the `wordexp(3)`.
 #
 
-set $gnome-schema org.gnome.desktop.interface
-exec_always {
-    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-    gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
-    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
-}
+exec_always ~/.local/bin/autotiling -w 1 2 3 4 5 6 7 8 9
 
-exec_always ~/.local/bin/autotiling
+exec_always pkill -9 swayidle
 
-exec xsettingsd
-exec dbus-update-activation-environment --systemd GTK_THEME=adw-gtk3-dark
 exec fcitx5 -d --replace --disable=notificationitem
 
 set $menu rofi -show combi -combi-modes drun#run -modes combi -combi-display-format "<span foreground='#777777'><i>{mode}</i></span>  {text}" -theme ~/.config/rofi/dark_flat.rasi
 
-# exec GTK_IM_MODULE=fcitx QT_IM_MODULE=fcitx XMODIFIERS=@im=fcitx alacritty
+exec workspace 1

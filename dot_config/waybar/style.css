@@ -1,6 +1,8 @@
 * {
-    font-family: 'Noto Sans Mono', 'Font Awesome 6 Free', 'Font Awesome 6 Brands', monospace;
+    font-family: 'JetBrainsMono Nerd Font', 'Noto Sans Mono', 'Font Awesome 6 Free', 'Font Awesome 6 Brands', monospace;
     font-size: 13px;
+    transition-duration: 0s;
+    transition-delay: 0s;
 }
 
 window#waybar {
@@ -8,7 +10,16 @@ window#waybar {
     border-bottom: 2px solid #282a2d;
     color: #ffffff;
     transition-property: background-color;
-    transition-duration: .5s;
+    transition-duration: 0s;
+}
+
+#workspaces button:hover,
+#clock:hover,
+#battery:hover,
+#network:hover,
+.modules-right > widget > *:hover {
+    transition-duration: 0s;
+    transition-delay: 0s;
 }
 
 window#waybar.hidden {
@@ -50,12 +61,11 @@ button:hover {
 
 #mode {
     background-color: #282a2d;
-    color: #ff5252;
-    box-shadow: inset 0 -3px #ff5252;
+    color: #26A65B;
+    box-shadow: inset 0 -3px #26A65B;
 }
 
 #clock,
-#battery,
 #cpu,
 #memory,
 #disk,
@@ -149,32 +159,11 @@ button:hover {
     color: #ffffff;
 }
 
-/* Battery: Yellow when normal, Green when charging */
-#battery {
-    background-color: #282a2d;
-    color: #ffffff;
-}
-
-#battery.charging, #battery.plugged {
-    background-color: #26A65B;
-    color: #ffffff;
-}
-
 @keyframes blink {
     to {
         background-color: #ff5252;
         color: #ffffff;
     }
-}
-
-#battery.critical:not(.charging) {
-    background-color: #ff5252;
-    color: #ffffff;
-    animation-name: blink;
-    animation-duration: 0.5s;
-    animation-timing-function: steps(12);
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
 }
 
 #idle_inhibitor {
@@ -196,7 +185,7 @@ button:hover {
 
 /* --- Tray Styling --- */
 #tray {
-    background-color: #18191a;
+    background-color: #282a2d;
     padding: 0 8px;
     margin: 0 2px;
 }
@@ -230,7 +219,7 @@ button:hover {
 #bluetooth.connected {
     background-color: #2563eb;
     color: #ffffff;
-    padding: 0 14px;
+    padding: 0 6px;
 }
 
 #bluetooth.off,
@@ -259,4 +248,35 @@ button:hover {
     background-color: #282a2d;
     color: #ffffff;
     padding: 0 6px;
+}
+
+tooltip {
+  opacity: 1;
+  transition: none ;
+  animation: none ;
+}
+
+#waybar tooltip {
+  transition-duration: 0s ;
+  transition-delay: 0s ;
+}
+
+#custom-recorder.recording {
+    background-color: #f38ba8;
+    color: #11111b;
+    padding: 0 10px;
+    margin: 3px 0;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+#custom-warp {
+    padding-left: 8px;
+    padding-right: 9px;
+    font-size: 16px;
+    transition: all 0.2s ease-in-out;
+}
+
+#custom-warp.connected {
+    color: #ff8c00;
 }
