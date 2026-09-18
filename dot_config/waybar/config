@@ -15,24 +15,15 @@
         "sway/window"
     ],
     "modules-right": [
-        "custom/warp",
         "custom/recorder",
+        "tray",
         "pulseaudio",
         "power-profiles-daemon",
         "network",
         "bluetooth",
         "custom/fcitx5",
-        "clock",
-        "tray"
+        "clock"
     ],
-    "custom/warp": {
-        "format": "󰕥",
-        "exec": "warp-cli status | grep -q Connected && echo '{\"text\":\"󰕥\",\"tooltip\":\"Cloudflare WARP: Connected (Click to disconnect)\",\"class\":\"connected\"}'",
-        "return-type": "json",
-        "interval": 5,
-        "on-click": "warp-cli disconnect",
-        "tooltip": true
-    },
     "custom/recorder": {
         "format": "{}",
         "interval": 2,

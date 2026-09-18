@@ -5,6 +5,7 @@ return {
   event = { 'BufReadPost', 'BufNewFile' },
   opts = {
     ensure_installed = {
+      'rust',
       'cpp',
       'typescript',
       'javascript',

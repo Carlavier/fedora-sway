@@ -185,9 +185,8 @@ button:hover {
 
 /* --- Tray Styling --- */
 #tray {
-    background-color: #282a2d;
-    padding: 0 8px;
-    margin: 0 2px;
+    background-color: transparent;
+    /* margin: 0 4px; */
 }
 
 #tray > .passive,
@@ -268,15 +267,4 @@ tooltip {
     margin: 3px 0;
     border-radius: 4px;
     font-weight: bold;
-}
-
-#custom-warp {
-    padding-left: 8px;
-    padding-right: 9px;
-    font-size: 16px;
-    transition: all 0.2s ease-in-out;
-}
-
-#custom-warp.connected {
-    color: #ff8c00;
 }
