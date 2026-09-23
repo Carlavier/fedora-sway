@@ -186,7 +186,6 @@ button:hover {
 /* --- Tray Styling --- */
 #tray {
     background-color: transparent;
-    /* margin: 0 4px; */
 }
 
 #tray > .passive,

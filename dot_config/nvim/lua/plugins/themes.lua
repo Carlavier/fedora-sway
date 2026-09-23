@@ -3,7 +3,7 @@ return {
   --   'sirzif/tzfn.nvim',
   --   name = 'tzfn',
   --   priority = 1000,
-  --   lazy = fasle,
+  --   lazy = false,
   --   config = function()
   --     vim.cmd('colorscheme tzfn')
   --   end,
@@ -11,12 +11,11 @@ return {
   -- {
   --   'Abstract-IDE/Abstract-cs',
   --   name = 'abscs',
-  -- priority = 1000,
-  -- lazy = fasle,
-  -- config = function()
-  --   vim.cmd("colorscheme abscs")
-  -- end,
-  -- everything is nice except for the purple part and string color
+  --   priority = 1000,
+  --   lazy = false,
+  --   config = function()
+  --     vim.cmd("colorscheme abscs")
+  --   end,
   -- },
   {
     'uncleTen276/dark_flat.nvim',
@@ -41,10 +40,10 @@ return {
   -- },
   -- {
   --   'zootedb0t/citruszest.nvim',
-  -- priority = 1000,
-  -- lazy = fasle,
-  -- config = function()
-  --   vim.cmd("colorscheme citruszest")
-  -- end,
+  --   priority = 1000,
+  --   lazy = false,
+  --   config = function()
+  --     vim.cmd("colorscheme citruszest")
+  --   end,
   -- },
 }

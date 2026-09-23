@@ -99,6 +99,14 @@ local servers = {
 
 return {
   {
+    'KostkaBrukowa/definition-or-references.nvim',
+    opts = {},
+    init = function()
+      vim.api.nvim_set_hl(0, 'qfLineNr', { fg = '#7aa2f7', bold = true })
+      vim.api.nvim_set_hl(0, 'TroublePos', { fg = '#7aa2f7', bold = true })
+    end,
+  },
+  {
     'mason-org/mason.nvim',
     config = function()
       require('mason').setup({
@@ -116,9 +124,13 @@ return {
   {
     'neovim/nvim-lspconfig',
     config = function()
+      local def_or_ref = require('definition-or-references')
+
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(event)
-          vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = event.buf, desc = 'Go to definition' })
+          vim.keymap.set('n', 'gd', function()
+            def_or_ref.definition_or_references()
+          end, { buffer = event.buf, desc = 'Go to definition or references' })
           vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = event.buf, desc = 'Go to declaration' })
           vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { buffer = event.buf, desc = 'Go to implementation' })
           vim.keymap.set('n', 'go', vim.lsp.buf.type_definition, { buffer = event.buf, desc = 'Go to type definition' })

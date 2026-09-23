@@ -1,0 +1,50 @@
+map - updir
+map j updir
+map k up
+map l down
+map ; open
+map <enter> open
+map h :find-next
+
+map <space>e $stat "$f"
+map <space>o $touch "new_file"
+
+map q
+cmd q quit
+
+cmd trash %trash-put $fx
+
+map . set hidden!
+
+set previewer ~/.config/lf/preview.sh
+
+cmd create %{{
+    read -r path
+
+    [ -z "$path" ] && exit 0
+
+    ~/.config/lf/create.sh "$path"
+}}
+
+map o create
+
+cmd make-exec %"$HOME/.config/lf/chmod_x.sh" + $fx
+map x make-exec
+
+cmd remove-exec %"$HOME/.config/lf/chmod_x.sh" - $fx
+map X remove-exec
+
+cmd cd %{{
+    result="$(zoxide query --exclude "$PWD" -- "$@" | sed 's/\\/\\\\/g;s/"/\\"/g')"
+
+    if [ -n "$result" ]; then
+        lf -remote "send $id cd \"$result\""
+    else
+        printf 'z: no match: %s' "$*"
+    fi
+}}
+
+cmd zi ${{
+    result="$(zoxide query -i | sed 's/\\/\\\\/g;s/"/\\"/g')"
+    [ -n "$result" ] && lf -remote "send $id cd \"$result\""
+}}

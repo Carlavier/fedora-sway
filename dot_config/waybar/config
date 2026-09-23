@@ -49,6 +49,10 @@
             "3": ["DP-2"],
             "4": ["DP-2"],
             "5": ["DP-2"],
+            "6": ["DP-2"],
+            "7": ["DP-2"],
+            "8": ["DP-2"],
+            "9": ["DP-2"],
             "S": ["HDMI-A-1"]
         }
     },
@@ -155,7 +159,7 @@
       "format-icons": {
         "default": "",
         "performance": "",
-        "balanced": "",
+        "balanced": "󰓅",
         "power-saver": ""
       }
     },

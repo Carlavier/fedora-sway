@@ -20,6 +20,7 @@ with open(PID_FILE, "w") as f:
     f.write(str(os.getpid()))
 
 TARGET_OUTPUT = "HDMI-A-1"
+TARGET_WORKSPACE = "S"
 FILLER_APP_ID = "portrait_filler"
 matches = glob.glob(os.path.expanduser("~/.wallpaper/using/filler.*"))
 IMAGE_PATH = matches[0] if matches else ""
@@ -48,22 +49,26 @@ def get_node_output(node):
 def get_target_windows():
     target_leaves = []
     for leaf in sway.get_tree().leaves():
-        if get_node_output(leaf) == TARGET_OUTPUT:
-            app_id = getattr(leaf, "app_id", "") or ""
-            win_class = (
-                (getattr(leaf, "ipc_data", {}) or {})
-                .get("window_properties", {})
-                .get("class", "")
-            )
-            is_floating = getattr(leaf, "floating", "") in ("auto_on", "user_on")
+        if get_node_output(leaf) != TARGET_OUTPUT:
+            continue
+        ws = leaf.workspace()
+        if not ws or ws.name != TARGET_WORKSPACE:
+            continue
+        app_id = getattr(leaf, "app_id", "") or ""
+        win_class = (
+            (getattr(leaf, "ipc_data", {}) or {})
+            .get("window_properties", {})
+            .get("class", "")
+        )
+        is_floating = getattr(leaf, "floating", "") in ("auto_on", "user_on")
 
-            if (
-                app_id != "imv"
-                and app_id != FILLER_APP_ID
-                and win_class != FILLER_APP_ID
-                and not is_floating
-            ):
-                target_leaves.append(leaf)
+        if (
+            app_id != "imv"
+            and app_id != FILLER_APP_ID
+            and win_class != FILLER_APP_ID
+            and not is_floating
+        ):
+            target_leaves.append(leaf)
     return target_leaves
 
 
@@ -103,7 +108,8 @@ def sync_layout(sway_conn, event=None):
 
         if event and getattr(event, "container", None):
             focused_id = event.container.id
-            sway_conn.command(f'[con_id="{focused_id}"] move up')
+            if any(w.id == focused_id for w in windows):
+                sway_conn.command(f'[con_id="{focused_id}"] move up')
 
     elif count == 0 and filler_proc and filler_proc.poll() is None:
         filler_proc.terminate()

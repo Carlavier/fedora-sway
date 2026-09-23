@@ -42,7 +42,13 @@ return {
 
       local ext = vim.fn.fnamemodify(filepath, ':e'):lower()
       local is_react = (ext == 'jsx' or ext == 'tsx' or ext == 'js' or ext == 'ts')
-      local valid_extensions = { svg = true, png = true, jpg = true, jpeg = true, webp = true }
+      local valid_extensions = {
+        svg = true,
+        png = true,
+        jpg = true,
+        jpeg = true,
+        webp = true,
+      }
 
       local base_cmd = ''
       local stdin_data = nil
@@ -57,15 +63,19 @@ return {
           svg_content = svg_content:gsub('stroke={[^}]+}', 'stroke="currentColor"')
 
           stdin_data = svg_content
-          base_cmd = 'chafa --colors truecolor --align center'
+
+          base_cmd = 'chafa --colors full --symbols block --align center'
         else
           vim.notify('No embedded <svg> block discovered in this component.', vim.log.levels.WARN)
           return
         end
       elseif valid_extensions[ext] then
-        base_cmd = 'chafa --colors truecolor --align center ' .. vim.fn.shellescape(filepath)
+        base_cmd = 'chafa --colors full --symbols block --align center ' .. vim.fn.shellescape(filepath)
       else
-        vim.notify('Unsupported media type: ViewImage only displays image assets.', vim.log.levels.WARN)
+        vim.notify(
+          'Unsupported media type: ViewImage only displays image assets.',
+          vim.log.levels.WARN
+        )
         return
       end
 
@@ -97,18 +107,25 @@ return {
         style = 'minimal',
         border = 'rounded',
       }
+
       active_win = vim.api.nvim_open_win(active_buf, true, win_opts)
 
       vim.keymap.set('n', 'q', function()
         if active_win and vim.api.nvim_win_is_valid(active_win) then
           vim.api.nvim_win_close(active_win, true)
         end
+
         if active_buf and vim.api.nvim_buf_is_valid(active_buf) then
           vim.api.nvim_buf_delete(active_buf, { force = true })
         end
+
         active_win = nil
         active_buf = nil
-      end, { buffer = active_buf, silent = true, nowait = true })
+      end, {
+        buffer = active_buf,
+        silent = true,
+        nowait = true,
+      })
 
       local max_cols = math.max(10, float_width - 4)
       local max_rows = math.max(5, float_height - 2)
@@ -117,12 +134,24 @@ return {
       local function render()
         -- 1. Apply matching background highlights to the floating window
         if active_win and vim.api.nvim_win_is_valid(active_win) then
-          local hl_group = current_bg == 'white' and 'ViewImageBgWhite' or 'ViewImageBgBlack'
-          vim.wo[active_win].winhighlight = 'Normal:' .. hl_group .. ',FloatBorder:' .. hl_group
+          local hl_group =
+              current_bg == 'white'
+              and 'ViewImageBgWhite'
+              or 'ViewImageBgBlack'
+
+          vim.wo[active_win].winhighlight =
+              'Normal:' .. hl_group .. ',FloatBorder:' .. hl_group
         end
 
-        -- 2. Construct chafa command with background flag for blending calculation
-        local cmd = string.format('%s --bg %s --size %dx%d', base_cmd, current_bg, max_cols, max_rows)
+        -- 2. Construct chafa command
+        local cmd = string.format(
+          '%s --bg %s --size %dx%d',
+          base_cmd,
+          current_bg,
+          max_cols,
+          max_rows
+        )
+
         if is_react then
           cmd = cmd .. ' -'
         end
@@ -130,14 +159,21 @@ return {
         local output = vim.fn.systemlist(cmd, stdin_data)
 
         local function get_visual_width(line)
-          local clean = line:gsub('\27%[[%d;]*%a', ''):gsub('%[%?%d+[hl]', '')
+          local clean = line
+              :gsub('\27%[[%d;]*%a', '')
+              :gsub('%[%?%d+[hl]', '')
+
           return vim.fn.strdisplaywidth(clean)
         end
 
         local raw_cleaned = {}
         local max_visual_width = 0
+
         for _, line in ipairs(output) do
-          local cleaned = line:gsub('\27%[%?%d+[hl]', ''):gsub('%[%?%d+[hl]', '')
+          local cleaned = line
+              :gsub('\27%[%?%d+[hl]', '')
+              :gsub('%[%?%d+[hl]', '')
+
           table.insert(raw_cleaned, cleaned)
 
           local visual_len = get_visual_width(cleaned)
@@ -149,12 +185,16 @@ return {
         local final_lines = {}
         local actual_height = #raw_cleaned
 
-        local top_padding = math.max(0, math.floor((float_height - actual_height) / 2))
+        local top_padding =
+            math.max(0, math.floor((float_height - actual_height) / 2))
+
         for _ = 1, top_padding do
           table.insert(final_lines, '')
         end
 
-        local left_padding_amt = math.max(0, math.floor((float_width - max_visual_width) / 2))
+        local left_padding_amt =
+            math.max(0, math.floor((float_width - max_visual_width) / 2))
+
         local left_space = string.rep(' ', left_padding_amt)
 
         for _, line in ipairs(raw_cleaned) do
@@ -162,11 +202,19 @@ return {
         end
 
         local bottom_padding = float_height - #final_lines
+
         for _ = 1, bottom_padding do
           table.insert(final_lines, '')
         end
 
-        vim.api.nvim_buf_set_lines(active_buf, 0, -1, false, final_lines)
+        vim.api.nvim_buf_set_lines(
+          active_buf,
+          0,
+          -1,
+          false,
+          final_lines
+        )
+
         baleia.once(active_buf)
       end
 
@@ -177,12 +225,20 @@ return {
       vim.keymap.set('n', 'w', function()
         current_bg = 'white'
         render()
-      end, { buffer = active_buf, silent = true, nowait = true })
+      end, {
+        buffer = active_buf,
+        silent = true,
+        nowait = true,
+      })
 
       vim.keymap.set('n', 'b', function()
         current_bg = 'black'
         render()
-      end, { buffer = active_buf, silent = true, nowait = true })
+      end, {
+        buffer = active_buf,
+        silent = true,
+        nowait = true,
+      })
     end, {})
   end,
 }

@@ -11,6 +11,11 @@ vim.keymap.set('n', '<M-k>', '<C-w>k', { noremap = true })
 vim.keymap.set('n', '<M-l>', '<C-w>j', { noremap = true })
 vim.keymap.set('n', '<M-;>', '<C-w>l', { noremap = true })
 
+vim.keymap.set('n', '<M-Left>', '<C-w>h', { noremap = true })
+vim.keymap.set('n', '<M-Up>', '<C-w>k', { noremap = true })
+vim.keymap.set('n', '<M-Down>', '<C-w>j', { noremap = true })
+vim.keymap.set('n', '<M-Right>', '<C-w>l', { noremap = true })
+
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { noremap = true })
 
 vim.keymap.set('n', '<Esc>', function()
@@ -49,8 +54,6 @@ vim.keymap.set('n', ']d', function()
 end, { desc = 'Go to next diagnostic' })
 
 vim.keymap.set('n', 'q:', '<nop>')
-
-vim.keymap.set('n', '<leader>bd', '<cmd>bd<cr>')
 
 vim.keymap.set('n', '<leader>tww', function()
   vim.wo.wrap = not vim.wo.wrap

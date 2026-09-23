@@ -4,6 +4,7 @@
   "chafa.nvim": { "branch": "main", "commit": "792c8f4f0e86b5e27c3602be4614f886f3a12a5a" },
   "conform.nvim": { "branch": "master", "commit": "016802de402556da54c36bd7359b441266b01cdd" },
   "dark_flat.nvim": { "branch": "main", "commit": "37b75c99d3294efdefeef2149687b96c42da4fa2" },
+  "definition-or-references.nvim": { "branch": "main", "commit": "7318f9479d2db357d2908599c3ec14bec7c589dd" },
   "fidget.nvim": { "branch": "main", "commit": "9e0201673e08e997e7cf52afca5565c70bd117f3" },
   "friendly-snippets": { "branch": "main", "commit": "6cd7280adead7f586db6fccbd15d2cac7e2188b9" },
   "gitsigns.nvim": { "branch": "main", "commit": "5be654f2232c10ddcad19c1607a67b6b4b78fc29" },
