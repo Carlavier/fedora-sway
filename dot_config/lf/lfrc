@@ -16,6 +16,10 @@ cmd trash %trash-put $fx
 
 map . set hidden!
 
+map Y $printf '%s' "$f" | wl-copy
+
+map <a-r> reload
+
 set previewer ~/.config/lf/preview.sh
 
 cmd create %{{
@@ -35,12 +39,13 @@ cmd remove-exec %"$HOME/.config/lf/chmod_x.sh" - $fx
 map X remove-exec
 
 cmd cd %{{
-    result="$(zoxide query --exclude "$PWD" -- "$@" | sed 's/\\/\\\\/g;s/"/\\"/g')"
+    result="$(timeout 6 env -u SSH_CONNECTION -u ALACRITTY_WINDOW_ID setsid "$SHELL" -ic 'cd "$@" >/dev/null 2>&1 && pwd' lf "$@" </dev/null 2>/dev/null)"
 
     if [ -n "$result" ]; then
+        result="$(printf '%s' "$result" | sed 's/\\/\\\\/g;s/"/\\"/g')"
         lf -remote "send $id cd \"$result\""
     else
-        printf 'z: no match: %s' "$*"
+        printf 'cd: no match: %s' "$*"
     fi
 }}
 

@@ -16,16 +16,68 @@ fi
 
 eval "$(zoxide init bash --cmd cd)"
 
-if [ -x "$HOME/.local/bin/thefuck" ]; then
-	eval "$("$HOME/.local/bin/thefuck" --alias)"
+if command -v thebleep >/dev/null 2>&1; then
+    eval "$(thebleep --alias-loader fuck)"
 fi
 
-th() {
-	tmux split-window -v -c "#{pane_current_path}"
+cbg() {
+    local base="$HOME/.wallpaper"
+    local name="$1"
+
+    if [[ -z "$name" ]]; then
+        echo "Usage: cbg <folder>"
+        return 1
+    fi
+
+    if [[ "$name" == "ls" ]]; then
+        for dir in "$base"/*/; do
+            [[ -d "$dir" ]] || continue
+            [[ "$(basename "$dir")" == .* || "$(basename "$dir")" == "using" ]] && continue
+            basename "$dir"
+        done
+        return
+    fi
+
+    if [[ ! -d "$base/$name" || "$name" == "using" || "$name" == .* ]]; then
+        echo "Invalid wallpaper folder: $name"
+        return 1
+    fi
+
+    rm -rf "$base/using" >/dev/null 2>&1
+    mkdir -p "$base/using" >/dev/null 2>&1 || return 1
+    cp -a "$base/$name/." "$base/using/" >/dev/null 2>&1 || return 1
+
+    swaymsg reload >/dev/null 2>&1
+    swaymsg '[app_id="imv" title="filler[.]"] kill' >/dev/null 2>&1
+
+    if [[ -f /tmp/portrait_manager.pid ]]; then
+        kill "$(cat /tmp/portrait_manager.pid)" 2>/dev/null
+    fi
+
+    sleep 0.2
+
+    setsid -f python3 "$HOME/.config/sway/portrait_manager.py" \
+        >/dev/null 2>&1 </dev/null
 }
 
-tv() {
-	tmux split-window -h -c "#{pane_current_path}"
+_cbg_completion() {
+    local base="$HOME/.wallpaper"
+    local dir
+    local folders=()
+
+    for dir in "$base"/*/; do
+        [[ -d "$dir" ]] || continue
+
+        local folder
+        folder="$(basename "$dir")"
+        [[ "$folder" == .* || "$folder" == "using" ]] && continue
+
+        folders+=("$folder")
+    done
+
+    COMPREPLY=( $(compgen -W "${folders[*]}" -- "${COMP_WORDS[COMP_CWORD]}") )
 }
+
+complete -F _cbg_completion cbg
 
 stty -ixon

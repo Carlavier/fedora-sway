@@ -1,3 +1,13 @@
+configuration {
+    combi-hide-mode-prefix: true;
+    modi: "drun,run,window";
+    show-icons: true;
+    icon-theme: "Papirus";
+    display-drun: "";
+    display-combi: " ";
+    display-run: "run";
+}
+
 * {
     bg:          #0b0b0b;
     surface:     #1a1a1a;
@@ -7,59 +17,79 @@
     text:        #ffffff;
     muted:       #777777;
 
-    background-color:   transparent;
-    text-color:         @text;
-    margin:             0;
-    padding:            0;
+    background-color: transparent;
+    text-color: @text;
+    margin: 0;
+    padding: 0;
 }
 
 window {
-    background-color:   @bg;
-    border:             2px;
-    border-color:       @win-border;
-    width:              600px;
-    padding:            15px;
+    background-color: @bg;
+    border: 2px;
+    border-color: @win-border;
+    width: 600px;
+    padding: 15px;
 }
 
 mainbox {
-    children: [ inputbar, listview ];
+    children: [inputbar, listview];
     spacing: 12px;
 }
 
 inputbar {
-    background-color:   @surface;
-    padding:            8px 12px;
-    children:           [ entry ];
+    background-color: @surface;
+    padding: 8px 12px;
+    children: [mode-switcher, entry];
+    spacing: 12px;
+}
+
+mode-switcher {
+    enabled: true;
+    children: [mode-switcher-button];
+}
+
+mode-switcher-button {
+    padding: 0;
+    text-color: @text;
 }
 
 entry {
-    placeholder:        "Search...";
-    placeholder-color:  @muted;
-    text-color:         @text;
+    placeholder: "Search...";
+    placeholder-color: @muted;
+    text-color: @text;
 }
 
 listview {
-    lines:              8;
-    columns:            1;
-    fixed-height:       true;
-    spacing:            4px;
+    lines: 8;
+    columns: 1;
+    fixed-height: true;
+    spacing: 4px;
 }
 
 element {
-    padding:            8px 12px;
+    padding: 8px 12px;
+    orientation: horizontal;
+    children: [element-icon, element-text];
+    spacing: 12px;
 }
 
-element selected {
-    background-color:   @sel-bg;
-    border:             0px 0px 0px 3px;
-    border-color:       @accent;
+element-icon {
+    size: 24px;
+    background-color: transparent;
 }
 
 element-text {
-    text-color:         @text;
-    highlight:          underline bold;
+    text-color: @text;
+    highlight: underline bold;
+    vertical-align: 0.5;
+}
+
+element selected {
+    background-color: @sel-bg;
+    border: 0px 0px 0px 3px;
+    border-color: @accent;
 }
 
 element-text selected {
-    text-color:         #ffffff;
+    text-color: #ffffff;
 }

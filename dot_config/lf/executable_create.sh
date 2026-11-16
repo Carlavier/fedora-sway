@@ -13,3 +13,5 @@ case "$path" in
         touch "$path"
         ;;
 esac
+
+lf -remote "send $id select \"$path\""

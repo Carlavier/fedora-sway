@@ -1,5 +1,26 @@
 #!/bin/bash
-set -euo pipefail
+set -Eeuo pipefail
+
+SCRIPT_NAME="run_onchange_before_dependencies.sh"
+LOG_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/chezmoi-scripts"
+LOG_FILE="$LOG_DIR/${SCRIPT_NAME%.sh}.log"
+mkdir -p "$LOG_DIR"
+
+exec > >(tee "$LOG_FILE") 2>&1
+
+on_error() {
+    local exit_code=$?
+    echo ""
+    echo "=== RESULT: ERROR ($SCRIPT_NAME) ==="
+    echo "exit code: $exit_code"
+    echo "line: $1"
+    echo "command: $BASH_COMMAND"
+    echo "log: $LOG_FILE"
+    exit "$exit_code"
+}
+trap 'on_error $LINENO' ERR
+
+echo "=== $(date '+%F %T') START $SCRIPT_NAME ==="
 
 sudo dnf install -y \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-"$(rpm -E %fedora)".noarch.rpm \
@@ -43,3 +64,5 @@ sudo dnf install -y \
     wf-recorder
 
 pipx install autotiling
+
+echo "=== $(date '+%F %T') RESULT: SUCCESS ($SCRIPT_NAME) ==="

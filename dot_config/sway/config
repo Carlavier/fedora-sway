@@ -1,9 +1,9 @@
 set $mod Mod4
 
-set $left j
-set $down l
+set $left h
+set $down j
 set $up k
-set $right semicolon
+set $right l
 
 set $term alacritty
 
@@ -43,7 +43,3 @@ exec fcitx5 -d --replace --disable=notificationitem
 set $menu rofi -show combi -combi-modes drun#run -modes combi -combi-display-format "<span foreground='#777777'><i>{mode}</i></span>  {text}" -theme ~/.config/rofi/dark_flat.rasi
 
 exec workspace 1
-
-for_window [app_id="noita.exe"] floating enable
-# or to force fullscreen:
-for_window [app_id="noita.exe"] fullscreen enable

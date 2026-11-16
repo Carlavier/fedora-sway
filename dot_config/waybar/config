@@ -167,7 +167,7 @@
         "format-wifi": "  {essid}",
         "format-ethernet": "󰈀 Wired",
         "format-disconnected": "󰤭 Disconnected",
-        "on-click": "alacritty -e nmtui"
+        "on-click": "nm-connection-editor"
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float

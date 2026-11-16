@@ -1,12 +1,108 @@
 #!/usr/bin/env python3
 import glob
 import os
+import re
 import signal
 import subprocess
+import sys
 import time
 import i3ipc
 
 PID_FILE = "/tmp/portrait_manager.pid"
+
+TARGET_OUTPUT = "HDMI-A-1"
+PRIMARY_OUTPUT = "DP-2"
+TARGET_WORKSPACE = "S"
+FILLER_TITLE_RE = re.compile(r"filler\.")
+FILLER_TIMEOUT = 2.0
+
+
+def get_node_output(node):
+    curr = node
+    while curr:
+        if getattr(curr, "type", "") == "output":
+            return getattr(curr, "name", None)
+        curr = getattr(curr, "parent", None)
+    return None
+
+
+def is_filler(node):
+    app_id = getattr(node, "app_id", "") or ""
+    win_class = (
+        (getattr(node, "ipc_data", {}) or {})
+        .get("window_properties", {})
+        .get("class", "")
+    )
+    if app_id != "imv" and win_class != "imv":
+        return False
+    return bool(FILLER_TITLE_RE.search(getattr(node, "name", "") or ""))
+
+
+def on_target_output(node):
+    if get_node_output(node) != TARGET_OUTPUT:
+        return False
+    ws = node.workspace()
+    return bool(ws and ws.name == TARGET_WORKSPACE)
+
+
+def get_target_windows(conn):
+    target_leaves = []
+    for leaf in conn.get_tree().leaves():
+        if not on_target_output(leaf):
+            continue
+        if is_filler(leaf):
+            continue
+        if getattr(leaf, "floating", "") in ("auto_on", "user_on"):
+            continue
+        target_leaves.append(leaf)
+    return target_leaves
+
+
+def get_filler_windows(conn, target_only=False):
+    fillers = []
+    for leaf in conn.get_tree().leaves():
+        if not is_filler(leaf):
+            continue
+        if target_only and not on_target_output(leaf):
+            continue
+        fillers.append(leaf)
+    return fillers
+
+
+def settle_windows(sway_conn, event):
+    windows = get_target_windows(sway_conn)
+    container = getattr(event, "container", None) if event else None
+    if container is None or getattr(event, "change", "") != "move":
+        return windows
+    deadline = time.time() + 0.25
+    while time.time() < deadline:
+        if any(w.id == container.id for w in windows):
+            return windows
+        time.sleep(0.05)
+        windows = get_target_windows(sway_conn)
+    return windows
+
+
+def move_focused_left(conn):
+    focused = conn.get_tree().find_focused()
+    if not focused or get_node_output(focused) != TARGET_OUTPUT:
+        conn.command("move left")
+        return
+
+    if is_filler(focused):
+        targets = get_target_windows(conn)
+        if len(targets) == 1:
+            conn.command(
+                f'[con_id="{targets[0].id}"] move container to output {PRIMARY_OUTPUT}'
+            )
+        return
+
+    conn.command(f"move container to output {PRIMARY_OUTPUT}")
+
+
+if "--move-left" in sys.argv:
+    move_focused_left(i3ipc.Connection())
+    sys.exit(0)
 
 if os.path.exists(PID_FILE):
     try:
@@ -19,17 +115,12 @@ if os.path.exists(PID_FILE):
 with open(PID_FILE, "w") as f:
     f.write(str(os.getpid()))
 
-TARGET_OUTPUT = "HDMI-A-1"
-TARGET_WORKSPACE = "S"
-FILLER_APP_ID = "portrait_filler"
 matches = glob.glob(os.path.expanduser("~/.wallpaper/using/filler.*"))
 IMAGE_PATH = matches[0] if matches else ""
 FILLER_CMD = [
     "imv",
     "-s",
     "crop",
-    "-c",
-    f"set window_title {FILLER_APP_ID}",
     IMAGE_PATH,
 ]
 
@@ -37,83 +128,77 @@ sway = i3ipc.Connection()
 filler_proc = None
 
 
-def get_node_output(node):
-    curr = node
-    while curr:
-        if getattr(curr, "type", "") == "output":
-            return getattr(curr, "name", None)
-        curr = getattr(curr, "parent", None)
-    return None
-
-
-def get_target_windows():
-    target_leaves = []
-    for leaf in sway.get_tree().leaves():
-        if get_node_output(leaf) != TARGET_OUTPUT:
-            continue
-        ws = leaf.workspace()
-        if not ws or ws.name != TARGET_WORKSPACE:
-            continue
-        app_id = getattr(leaf, "app_id", "") or ""
-        win_class = (
-            (getattr(leaf, "ipc_data", {}) or {})
-            .get("window_properties", {})
-            .get("class", "")
-        )
-        is_floating = getattr(leaf, "floating", "") in ("auto_on", "user_on")
-
-        if (
-            app_id != "imv"
-            and app_id != FILLER_APP_ID
-            and win_class != FILLER_APP_ID
-            and not is_floating
-        ):
-            target_leaves.append(leaf)
-    return target_leaves
-
-
-def sync_layout(sway_conn, event=None):
+def close_fillers(sway_conn, fillers):
     global filler_proc
+    for filler in fillers:
+        sway_conn.command(f'[con_id="{filler.id}"] kill')
+    if filler_proc is not None and filler_proc.poll() is None:
+        filler_proc.terminate()
+    filler_proc = None
 
+
+def spawn_filler(sway_conn, target, ws_name):
+    global filler_proc
+    existing_ids = {f.id for f in get_filler_windows(sway_conn)}
+
+    sway_conn.command(f'[con_id="{target.id}"] splitv')
+    filler_proc = subprocess.Popen(FILLER_CMD)
+
+    new_filler = None
+    deadline = time.time() + FILLER_TIMEOUT
+    while time.time() < deadline:
+        for filler in get_filler_windows(sway_conn):
+            if filler.id not in existing_ids:
+                new_filler = filler
+                break
+        if new_filler is not None:
+            break
+        time.sleep(0.05)
+
+    if new_filler is None:
+        return
+
+    sway_conn.command(
+        f'[con_id="{new_filler.id}"] move container to workspace {ws_name}'
+    )
+    sway_conn.command(f'[con_id="{new_filler.id}"] move up')
+
+
+def sync_layout(sway_conn, event=None, periodic=False):
     if event and getattr(event, "container", None):
         app_id = getattr(event.container, "app_id", "") or ""
-        if app_id == "imv" or app_id == FILLER_APP_ID:
+        if app_id == "imv":
             return
 
     time.sleep(0.05)
-    windows = get_target_windows()
+    windows = settle_windows(sway_conn, event)
     count = len(windows)
+    fillers = get_filler_windows(sway_conn, target_only=True)
 
-    if count == 1:
-        if filler_proc is None or filler_proc.poll() is not None:
-            win = windows[0]
-            ws = win.workspace()
-            ws_name = ws.name if ws else None
+    if count == 1 and not fillers:
+        if not IMAGE_PATH or not os.path.exists(IMAGE_PATH):
+            return
+        if filler_proc is not None and filler_proc.poll() is None:
+            return
+        win = windows[0]
+        ws = win.workspace()
+        ws_name = ws.name if ws else TARGET_WORKSPACE
 
-            sway_conn.command(f'[con_id="{win.id}"] splitv')
-            filler_proc = subprocess.Popen(FILLER_CMD)
-            time.sleep(0.08)
-
-            if ws_name:
-                sway_conn.command(
-                    f'[app_id="imv"] move container to workspace {ws_name}'
-                )
-            sway_conn.command(f'[app_id="imv"] move up')
+        spawn_filler(sway_conn, win, ws_name)
+        if not periodic:
             sway_conn.command(f'[con_id="{win.id}"] focus')
 
     elif count >= 2:
-        if filler_proc and filler_proc.poll() is None:
-            filler_proc.terminate()
-            filler_proc = None
+        if fillers:
+            close_fillers(sway_conn, fillers)
 
         if event and getattr(event, "container", None):
             focused_id = event.container.id
             if any(w.id == focused_id for w in windows):
                 sway_conn.command(f'[con_id="{focused_id}"] move up')
 
-    elif count == 0 and filler_proc and filler_proc.poll() is None:
-        filler_proc.terminate()
-        filler_proc = None
+    elif count == 0 and fillers:
+        close_fillers(sway_conn, fillers)
 
 
 sway.on("window::new", sync_layout)
@@ -121,4 +206,13 @@ sway.on("window::close", sync_layout)
 sway.on("window::move", sync_layout)
 
 sync_layout(sway)
-sway.main()
+
+while True:
+    try:
+        sway.main(timeout=0.5)
+    except Exception:
+        pass
+    try:
+        sync_layout(sway, periodic=True)
+    except Exception:
+        pass
