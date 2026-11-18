@@ -1,0 +1,30 @@
+output * bg /usr/share/backgrounds/default.jxl fill
+
+output {{ .primaryMonitor }} mode 1920x1080@99.650Hz pos 0 0
+output {{ .primaryMonitor }} transform 0
+
+output {{ .secondaryMonitor }} transform 90
+output {{ .secondaryMonitor }} mode 1920x1080@100Hz pos 1920 -760
+
+workspace 1 output {{ .primaryMonitor }}
+workspace 2 output {{ .primaryMonitor }}
+workspace 3 output {{ .primaryMonitor }}
+workspace 4 output {{ .primaryMonitor }}
+workspace 5 output {{ .primaryMonitor }}
+workspace 6 output {{ .primaryMonitor }}
+workspace 7 output {{ .primaryMonitor }}
+workspace 8 output {{ .primaryMonitor }}
+workspace 9 output {{ .primaryMonitor }}
+
+workspace S output {{ .secondaryMonitor }}
+
+output * dpms on
+
+output {{ .primaryMonitor }} bg ~/.wallpaper/using/primary.* fill
+output {{ .secondaryMonitor }} bg ~/.wallpaper/using/secondary.* fill
+
+exec python3 ~/.config/sway/portrait_manager.py
+exec sh -c 'marker="$XDG_RUNTIME_DIR/sway-initialized"; if [ ! -e "$marker" ]; then swaymsg "output {{ .secondaryMonitor }} disable"; touch "$marker"; fi'
+
+for_window [app_id="imv" title="filler[.]"] focus_on_window_activation none, no_focus
+for_window [app_id="imv" title="filler[.]"] move container to output {{ .secondaryMonitor }}

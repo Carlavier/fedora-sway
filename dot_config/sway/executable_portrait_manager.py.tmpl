@@ -10,8 +10,8 @@ import i3ipc
 
 PID_FILE = "/tmp/portrait_manager.pid"
 
-TARGET_OUTPUT = "HDMI-A-1"
-PRIMARY_OUTPUT = "DP-2"
+TARGET_OUTPUT = "{{ .secondaryMonitor }}"
+PRIMARY_OUTPUT = "{{ .primaryMonitor }}"
 TARGET_WORKSPACE = "S"
 FILLER_TITLE_RE = re.compile(r"filler\.")
 FILLER_TIMEOUT = 2.0

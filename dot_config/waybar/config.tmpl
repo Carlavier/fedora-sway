@@ -45,16 +45,16 @@
         "all-output": false,
         "format": "{name}",
         "persistent-workspaces": {
-            "1": ["eDP-1"],
-            "2": ["eDP-1"],
-            "3": ["eDP-1"],
-            "4": ["eDP-1"],
-            "5": ["eDP-1"],
-            "6": ["eDP-1"],
-            "7": ["eDP-1"],
-            "8": ["eDP-1"],
-            "9": ["eDP-1"],
-            "S": ["HDMI-A-1"]
+            "1": ["{{ .primaryMonitor }}"],
+            "2": ["{{ .primaryMonitor }}"],
+            "3": ["{{ .primaryMonitor }}"],
+            "4": ["{{ .primaryMonitor }}"],
+            "5": ["{{ .primaryMonitor }}"],
+            "6": ["{{ .primaryMonitor }}"],
+            "7": ["{{ .primaryMonitor }}"],
+            "8": ["{{ .primaryMonitor }}"],
+            "9": ["{{ .primaryMonitor }}"],
+            "S": ["{{ .secondaryMonitor }}"]
         }
     },
     "keyboard-state": {

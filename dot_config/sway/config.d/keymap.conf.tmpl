@@ -111,7 +111,7 @@ bindsym --no-repeat Shift+Print exec sh -c 'grim - | wl-copy >/dev/null 2>&1 &'
 bindsym --no-repeat $mod+Print exec sh -c 'pkill -INT wf-recorder 2>/dev/null || (pkill -9 slurp 2>/dev/null; GRIM_REGION=$(slurp) && [ -n "$GRIM_REGION" ] && wf-recorder -g "$GRIM_REGION" -f ~/Videos/recording_$(date +%Y%m%d_%H%M%S).mp4 &)'
 bindsym --no-repeat $mod+Shift+Print exec sh -c 'pkill -INT wf-recorder 2>/dev/null || wf-recorder -f ~/Videos/recording_$(date +%Y%m%d_%H%M%S).mp4 &'
 
-bindsym $mod+p output HDMI-A-1 toggle
+bindsym $mod+p output {{ .secondaryMonitor }} toggle
 
 bindsym Ctrl+Shift+z exec fcitx5-remote -t
 

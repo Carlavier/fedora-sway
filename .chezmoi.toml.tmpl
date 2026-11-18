@@ -1,0 +1,8 @@
+[data]
+{{ if contains "thtml" (.chezmoi.hostname | lower) }}
+primaryMonitor = "eDP-1"
+secondaryMonitor = ""
+{{ else }}
+primaryMonitor = "DP-2"
+secondaryMonitor = "HDMI-A-1"
+{{ end }}
