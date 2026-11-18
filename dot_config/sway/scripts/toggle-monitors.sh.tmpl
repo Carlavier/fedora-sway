@@ -1,0 +1,14 @@
+#!/bin/bash
+
+outputs=$(swaymsg -t get_outputs -r)
+
+primary=$(jq -r '.[] | select(.name == "{{ .primaryMonitor }}") | .power' <<< "$outputs")
+secondary=$(jq -r '.[] | select(.name == "{{ .secondaryMonitor }}") | .power' <<< "$outputs")
+
+if [[ "$primary" != "true" ]]; then
+    swaymsg 'output {{ .primaryMonitor }} power on'
+elif [[ "$secondary" != "true" ]]; then
+    swaymsg 'output {{ .secondaryMonitor }} power on'
+else
+    swaymsg 'output {{ .secondaryMonitor }} power off'
+fi

@@ -81,6 +81,13 @@ _cbg_completion() {
     COMPREPLY=( $(compgen -W "${folders[*]}" -- "${COMP_WORDS[COMP_CWORD]}") )
 }
 
+screenoff() {
+    local sock
+    sock=$(find "/run/user/$(id -u)" -maxdepth 1 -name 'sway-ipc.*.sock' -print -quit)
+    [[ -n "$sock" ]] || { echo "Sway is not running"; return 1; }
+    swaymsg -s "$sock" 'output * power off'
+}
+
 complete -F _cbg_completion cbg
 
 stty -ixon
