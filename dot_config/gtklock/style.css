@@ -1,0 +1,196 @@
+/* gtklock theme
+ *
+ * Palette taken from sway (config.d/theme.conf), waybar, dunst and rofi:
+ *   bg      #0b0b0b    surface #18191a    border  #282a2d
+ *   text    #ffffff    muted   #676e7b    focus   #00b0ff
+ *   accent  #ff5252    select  #3d1a1a
+ *
+ * Style language: flat dark surfaces, 2px borders, square corners,
+ * red bottom accent (waybar active workspace / dunst frame) and
+ * blue focus border (sway focused window / rofi).
+ */
+
+* {
+    font-family: 'JetBrainsMono Nerd Font', 'Noto Sans Mono', 'Font Awesome 6 Free', monospace;
+    font-size: 14px;
+    transition: none;
+}
+
+/* Background -------------------------------------------------------------- */
+
+window {
+    background-image: url("../../.wallpaper/using/blurred.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Optional: use your sway wallpaper instead of the gradient.
+ * Uncomment the block below and comment out the gradient above.
+ *
+ * window {
+ *     background-color: #0b0b0b;
+ *     background-image: url("file:///home/carlavier/.wallpaper/using/primary.png");
+ *     background-size: cover;
+ *     background-position: center;
+ * }
+ */
+
+/* Login panel ------------------------------------------------------------- */
+
+#window-box {
+    background-color: rgba(24, 25, 26, 0.94);
+    border: 2px solid #282a2d;
+    border-radius: 0;
+    padding: 28px 36px 32px 36px;
+    box-shadow: inset 0 -3px #ff5252;
+}
+
+/* Focused monitor gets the same blue border as a focused sway window */
+window.focused #window-box {
+    border-color: #00b0ff;
+}
+
+/* Clock and date ---------------------------------------------------------- */
+
+#clock-label {
+    font-size: 68px;
+    font-weight: bold;
+    color: #ffffff;
+    letter-spacing: 2px;
+}
+
+#date-label {
+    font-size: 15px;
+    color: #676e7b;
+    letter-spacing: 1px;
+    margin-top: 2px;
+    margin-bottom: 14px;
+}
+
+/* Password row ------------------------------------------------------------ */
+
+#input-label {
+    color: #676e7b;
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-right: 8px;
+}
+
+#input-field {
+    background-color: #0b0b0b;
+    background-image: none;
+    color: #ffffff;
+    border: 2px solid #282a2d;
+    border-radius: 0;
+    padding: 8px 12px;
+    min-height: 24px;
+    letter-spacing: 0;
+    caret-color: #ff5252;
+    box-shadow: none;
+}
+
+/* Applied by password-spacing.so while the password is masked */
+#input-field.password-hidden {
+    letter-spacing: 4px;
+}
+
+#input-field:focus {
+    border-color: #00b0ff;
+}
+
+#input-field selection {
+    background-color: #3d1a1a;
+    color: #ffffff;
+}
+
+#input-field image {
+    color: #676e7b;
+}
+
+/* Unlock button ----------------------------------------------------------- */
+
+#unlock-button,
+#unlock-button.suggested-action {
+    background-color: #282a2d;
+    background-image: none;
+    color: #ffffff;
+    border: none;
+    border-radius: 0;
+    padding: 8px 20px;
+    font-weight: bold;
+    box-shadow: inset 0 -3px transparent;
+}
+
+#unlock-button:hover,
+#unlock-button.suggested-action:hover {
+    background-color: #3d1a1a;
+    box-shadow: inset 0 -3px #ff5252;
+}
+
+#unlock-button:active,
+#unlock-button.suggested-action:active {
+    background-color: #ff5252;
+    color: #ffffff;
+    box-shadow: none;
+}
+
+#unlock-button:disabled {
+    background-color: #18191a;
+    color: #676e7b;
+    box-shadow: none;
+}
+
+/* Feedback labels --------------------------------------------------------- */
+
+#warning-label {
+    color: #f0932b;
+    font-size: 14px;
+    margin-right: 6px;
+}
+
+#error-label {
+    color: #f0932b;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* PAM info bars ----------------------------------------------------------- */
+
+#message-scrolled-window,
+#message-scrolled-window viewport {
+    background-color: transparent;
+    background-image: none;
+}
+
+#message-box infobar {
+    background-color: #18191a;
+    background-image: none;
+    border: 2px solid #282a2d;
+    border-radius: 0;
+    color: #ffffff;
+    box-shadow: none;
+}
+
+#message-box infobar.warning {
+    border-color: #f0932b;
+}
+
+#message-box infobar.info {
+    border-color: #00b0ff;
+}
+
+#message-box infobar label {
+    color: #ffffff;
+}
+
+#message-box infobar button {
+    background-image: none;
+    border-radius: 0;
+    box-shadow: none;
+    color: #676e7b;
+}
+
+#message-box infobar button:hover {
+    color: #ffffff;
+}

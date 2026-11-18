@@ -20,6 +20,7 @@
         "pulseaudio",
         "power-profiles-daemon",
         "network",
+        "battery",
         "bluetooth",
         "custom/fcitx5",
         "clock"
@@ -44,15 +45,15 @@
         "all-output": false,
         "format": "{name}",
         "persistent-workspaces": {
-            "1": ["DP-2"],
-            "2": ["DP-2"],
-            "3": ["DP-2"],
-            "4": ["DP-2"],
-            "5": ["DP-2"],
-            "6": ["DP-2"],
-            "7": ["DP-2"],
-            "8": ["DP-2"],
-            "9": ["DP-2"],
+            "1": ["eDP-1"],
+            "2": ["eDP-1"],
+            "3": ["eDP-1"],
+            "4": ["eDP-1"],
+            "5": ["eDP-1"],
+            "6": ["eDP-1"],
+            "7": ["eDP-1"],
+            "8": ["eDP-1"],
+            "9": ["eDP-1"],
             "S": ["HDMI-A-1"]
         }
     },
@@ -151,6 +152,30 @@
         // "device": "acpi_video1",
         "format": "{percent}% {icon}",
         "format-icons": ["🌑", "🌘", "🌗", "🌖", "🌕"]
+    },
+    "battery": {
+        "interval": 10,
+        "states": {
+            "critical": 20
+        },
+        "format": "{capacity}% {icon}",
+        "format-charging": "{capacity}% 󰂄",
+        "format-plugged": "{capacity}% ",
+        "format-full": "{capacity}% 󰁹",
+        "format-icons": [
+            "󰂎",
+            "󰁺",
+            "󰁻",
+            "󰁼",
+            "󰁽",
+            "󰁾",
+            "󰁿",
+            "󰂀",
+            "󰂁",
+            "󰂂",
+            "󰁹"
+        ],
+        "tooltip-format": "{capacity}% - {timeTo}"
     },
     "power-profiles-daemon": {
       "format": "{icon}",

@@ -4,8 +4,9 @@ set -Eeuo pipefail
 SCRIPT_NAME="run_onchange_after_tmux.sh"
 LOG_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/chezmoi-scripts"
 LOG_FILE="$LOG_DIR/${SCRIPT_NAME%.sh}.log"
-mkdir -p "$LOG_DIR"
+CONFIG="$HOME/.local/share/chezmoi/dot_tmux.conf"
 
+mkdir -p "$LOG_DIR"
 exec > >(tee "$LOG_FILE") 2>&1
 
 on_error() {
@@ -28,10 +29,20 @@ if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
     git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 fi
 
-tmux -f "$HOME/.local/share/chezmoi/dot_tmux.conf" new-session -d -s setup_session
+# Initialize tmux with our config.
+# Reuse an existing server instead of creating duplicate sessions.
+if tmux info >/dev/null 2>&1; then
+    tmux source-file "$CONFIG"
+else
+    tmux -f "$CONFIG" new-session -d -s setup_session
+fi
 
+# Make TPM's plugin directory available to both tmux and the installer.
+export TMUX_PLUGIN_MANAGER_PATH="$HOME/.tmux/plugins/"
+tmux set-environment -g TMUX_PLUGIN_MANAGER_PATH "$TMUX_PLUGIN_MANAGER_PATH"
+
+# Install configured plugins.
 "$HOME/.tmux/plugins/tpm/bin/install_plugins"
 
-tmux kill-session -t setup_session
-
 echo "=== $(date '+%F %T') RESULT: SUCCESS ($SCRIPT_NAME) ==="
+

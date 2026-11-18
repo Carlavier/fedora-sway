@@ -46,6 +46,9 @@ cbg() {
     rm -rf "$base/using" >/dev/null 2>&1
     mkdir -p "$base/using" >/dev/null 2>&1 || return 1
     cp -a "$base/$name/." "$base/using/" >/dev/null 2>&1 || return 1
+    if ! compgen -G "$base/using/blurred.*" > /dev/null; then
+        magick "$base"/using/primary.* -blur 0x15 -brightness-contrast -20x0 "$base"/using/blurred.png
+    fi
 
     swaymsg reload >/dev/null 2>&1
     swaymsg '[app_id="imv" title="filler[.]"] kill' >/dev/null 2>&1
