@@ -81,6 +81,8 @@ _cbg_completion() {
     COMPREPLY=( $(compgen -W "${folders[*]}" -- "${COMP_WORDS[COMP_CWORD]}") )
 }
 
+complete -F _cbg_completion cbg
+
 screenoff() {
     local sock
     sock=$(find "/run/user/$(id -u)" -maxdepth 1 -name 'sway-ipc.*.sock' -print -quit)
@@ -88,6 +90,12 @@ screenoff() {
     swaymsg -s "$sock" 'output * power off'
 }
 
-complete -F _cbg_completion cbg
+warp-cli() {
+    if [[ "$1" == "connect" ]] && ! systemctl is-active --quiet warp-svc; then
+        sudo systemctl start warp-svc || return 1
+    fi
+
+    command warp-cli "$@"
+}
 
 stty -ixon

@@ -6,9 +6,9 @@ primary=$(jq -r '.[] | select(.name == "{{ .primaryMonitor }}") | .power' <<< "$
 secondary=$(jq -r '.[] | select(.name == "{{ .secondaryMonitor }}") | .power' <<< "$outputs")
 
 if [[ "$primary" != "true" ]]; then
-    swaymsg 'output {{ .primaryMonitor }} power on'
+    swaymsg 'output {{ .primaryMonitor }} enable, output {{ .primaryMonitor }} power on'
 elif [[ "$secondary" != "true" ]]; then
-    swaymsg 'output {{ .secondaryMonitor }} power on'
+    swaymsg 'output {{ .secondaryMonitor }} enable, output {{ .secondaryMonitor }} power on'
 else
     swaymsg 'output {{ .secondaryMonitor }} power off'
 fi

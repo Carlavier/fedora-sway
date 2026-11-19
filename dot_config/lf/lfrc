@@ -1,16 +1,8 @@
-map - updir
-map j updir
-map k up
-map l down
-map ; open
-map <enter> open
-map h :find-next
+set relativenumber
+set number
 
 map <space>e $stat "$f"
 map <space>o $touch "new_file"
-
-map q
-cmd q quit
 
 cmd trash %trash-put $fx
 
@@ -19,6 +11,9 @@ map . set hidden!
 map Y $printf '%s' "$f" | wl-copy
 
 map <a-r> reload
+
+map q
+cmd q quit
 
 set previewer ~/.config/lf/preview.sh
 
@@ -43,13 +38,9 @@ cmd cd %{{
 
     if [ -n "$result" ]; then
         result="$(printf '%s' "$result" | sed 's/\\/\\\\/g;s/"/\\"/g')"
-        lf -remote "send $id cd \"$result\""
+        # lf -remote "send $id cd \"$result\""
+        lf -remote "send $id builtin-cd \"$result\""
     else
         printf 'cd: no match: %s' "$*"
     fi
-}}
-
-cmd zi ${{
-    result="$(zoxide query -i | sed 's/\\/\\\\/g;s/"/\\"/g')"
-    [ -n "$result" ] && lf -remote "send $id cd \"$result\""
 }}
